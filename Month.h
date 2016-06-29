@@ -91,6 +91,17 @@ public:
 	*/
 	Day * getLastDay();
 
+	/*
+		returns whether or not the given day is in the range of this
+	*/
+	bool containsDay(Day * day);
+
+	/*
+	returns the fund allocation of this divided by the number of working days
+	*/
+	double getAllocationPerDay();
+
+
 private:
 	/**
 	* this is the earliest date in this.

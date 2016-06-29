@@ -39,12 +39,21 @@ double Month::getAllocation() {
 	return this->fundAllocation;
 }
 
+double Month::getAllocationPerDay(){
+	return this->fundAllocation / days.size();
+}
+
 Day * Month::getFirstDay() {
 	return &this->startDate;
 }
 
 Day * Month::getLastDay() {
 	return &this->endDate;
+}
+bool Month::containsDay(Day * day){
+	bool toReturn = this->endDate.compare(day) >= 0;
+	toReturn = toReturn && this->startDate.compare(day) <= 0;
+	return toReturn;
 }
 
 void Month::setRawAllocation(double averageWorkUnits) {

@@ -14,6 +14,10 @@ class ProjectAllocator {
 
 public:
 
+	/**Default constructor. Should never be used
+	*/
+	ProjectAllocator();
+
 	/**
 	* constructor given the start and end date of the project.
 	*
@@ -58,6 +62,16 @@ public:
 	*/
 	void proportionalizeAllocations();
 
+	/*checks whether the given time frame overlaps with any allocation periods in this.
+	@requires startDate and endDate are valid dates in MM/DD/YYYY
+	*/
+	bool noOverlap(std::string startDate, std::string endDate);
+
+	/*checks whether the given date is within the project time frame
+	@requires date is a valid date in MM/DD/YYYY
+	*/
+	bool withinProject(std::string date);
+
 private:
 	/**
 	* the first day in this.
@@ -77,7 +91,7 @@ private:
 	/**
 	* list of the months to which funds have been allocated.
 	*/
-	std::vector<Month>  months;
+	std::vector<Month> months;
 
 	/**
 	* amount of funds allocated to this.

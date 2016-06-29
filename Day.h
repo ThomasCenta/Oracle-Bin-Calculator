@@ -9,6 +9,7 @@ holiday
 #include <stdlib.h>
 #include <string>
 
+std::string intToString(int input);
 
 #ifndef DAY_H
 #define DAY_H
@@ -30,6 +31,11 @@ public:
 	*          in interface fundAllocation is set to zero
 	*/
 	Day(std::string input);
+
+	/*returns a string representation of this
+	@return the date of this as MM/DD/YYYY
+	*/
+	std::string toString();
 
 	/**
 	* This updates the allocation for this.

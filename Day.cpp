@@ -5,7 +5,34 @@
 *
 */
 #include "Day.h"
+#include <iostream>
 
+
+std::string intToString(int input){
+	std::string toReturn = "";
+	char digits[10] = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+	if (input == 0){
+		toReturn = "0";
+	}
+	while (input > 0){
+		char next = input % 10 + '0';
+		toReturn = next + toReturn;
+		input = input / 10;
+	}
+	return toReturn;
+}
+
+
+int shiftDay(int categoricalDay, int day){
+	int toReturn = day;
+	if (categoricalDay == 5){
+		toReturn--;
+	}
+	else if (categoricalDay == 6){
+		toReturn++;
+	}
+	return toReturn;
+}
 
 /**
 *
@@ -46,19 +73,33 @@ static bool calculateHoliday(int day, int month, int year) {
 	//if its a weekend, say yes
 	bool weekend = categoricalDay >= 5;
 	//go through the holidays
-	bool christmasVacation = month == 12 && day >= 25;
-	christmasVacation = christmasVacation || month == 1 && day <= 2;
+	//go through set holiday dates
+	bool newYears = month == 1 && day == 1;
+	newYears = newYears || (month == 1 && day == 2 && categoricalDay == 0);
+	newYears = newYears || (month == 12 && day == 31 && categoricalDay == 4);
+	bool christmasVacation = (month == 12 && day == 25);
+	christmasVacation = christmasVacation || (month == 12 && day == 24 && categoricalDay == 4);
+	christmasVacation = christmasVacation || (month == 12 && day == 26 && categoricalDay == 0);
 	bool mlkDay = month == 1 && categoricalDay == 0
+		&& (day - 1) / 7 == 2;
+	bool presidentsDay = month == 2 && categoricalDay == 0
 		&& (day - 1) / 7 == 2;
 	bool memorial = month == 5 && categoricalDay == 0 && day >= 25;
 	bool julyFourth = month == 7 && day == 4;
+	julyFourth = julyFourth || (month == 7 && day == 3 && categoricalDay == 4);
+	julyFourth = julyFourth || (month == 7 && day == 5 && categoricalDay == 0);
 	bool laborDay = month == 9 && categoricalDay == 0 && day <= 7;
+	bool columbusDay = month == 10 && categoricalDay == 0
+		&& (day - 1) / 7 == 1;
+	bool veteransDay = month == 11 && day == 11;
+	veteransDay = veteransDay || (month == 11 && day == 10 && categoricalDay == 4);
+	veteransDay = veteransDay || (month == 11 && day == 12 && categoricalDay == 0);
 	bool thanksgiving = month == 11
 		&& (categoricalDay == 3 || categoricalDay == 4)
 		&& (day - 1) / 7 == 3;
 	//if any of these are true then return this date as a holiday
-	return weekend || christmasVacation || mlkDay || memorial || julyFourth
-		|| laborDay || thanksgiving;
+	return weekend || newYears || presidentsDay || columbusDay || christmasVacation || mlkDay 
+		|| veteransDay || memorial || julyFourth || laborDay || thanksgiving;
 
 }
 
@@ -72,6 +113,10 @@ Day::Day(std::string input) {
 	this->isHoliday = calculateHoliday(this->day, this->month, this->year);
 	this->date = input;
 	this->fundAllocation = 0;
+}
+
+std::string Day::toString(){
+	return this->date;
 }
 
 void Day::updateAllocation(double amount) {
@@ -126,7 +171,7 @@ int Day::getYear() {
 std::string Day::getNextDay() {
 	std::string toReturn = "";
 	if (this->month == 12 && this->day == 31) {
-		std::string nextYear = "" + (this->year + 1);
+		std::string nextYear = intToString(this->year + 1);
 		while (nextYear.length() < 4) {
 			nextYear = "0" + nextYear;
 		}
@@ -136,7 +181,7 @@ std::string Day::getNextDay() {
 		|| this->month == 7 || this->month == 8 || this->month == 10
 		|| this->month == 12) && this->day == 31) {
 
-		std::string nextMonth = (this->month + 1) + "";
+		std::string nextMonth = intToString(this->month + 1);
 		while (nextMonth.length() < 2) {
 			nextMonth = "0" + nextMonth;
 		}
@@ -146,7 +191,7 @@ std::string Day::getNextDay() {
 	else if ((this->month == 4 || this->month == 6 || this->month == 9
 		|| this->month == 11) && this->day == 30) {
 
-		std::string nextMonth = (this->month + 1) + "";
+		std::string nextMonth = intToString(this->month + 1);
 		while (nextMonth.length() < 2) {
 			nextMonth = "0" + nextMonth;
 		}
@@ -155,7 +200,7 @@ std::string Day::getNextDay() {
 	}
 	else if (this->month == 2 && this->year % 4 == 0 && this->day == 29) { //month == 2
 
-		std::string nextMonth = (this->month + 1) + "";
+		std::string nextMonth = intToString(this->month + 1);
 		while (nextMonth.length() < 2) {
 			nextMonth = "0" + nextMonth;
 		}
@@ -165,7 +210,7 @@ std::string Day::getNextDay() {
 	}
 	else if (this->month == 2 && this->year % 4 != 0 && this->day == 28) { //month == 2
 
-		std::string nextMonth = (this->month + 1) + "";
+		std::string nextMonth = intToString(this->month + 1);
 		while (nextMonth.length() < 2) {
 			nextMonth = "0" + nextMonth;
 		}
@@ -173,7 +218,7 @@ std::string Day::getNextDay() {
 
 	}
 	else {
-		std::string nextDay = "" + (this->day + 1);
+		std::string nextDay = intToString(this->day + 1);
 		while (nextDay.length() < 2) {
 			nextDay = "0" + nextDay;
 		}
